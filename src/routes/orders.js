@@ -27,12 +27,18 @@ orderRouter.route("/").post((req, res) => {
   const userId = req.body.userId;
   const pickupLocation = req.body.pickupLocation;
   const destination = req.body.destination;
+  const recipient_name = req.body.recipient_name;
+  const recipient_phone = req.body.recipient_phone;
+  const description = req.body.description;
   const price = Number(req.body.price);
 
   const newOrder = new Order({
     user_id: userId,
     pickup_location: pickupLocation,
     destination,
+    recipient_name,
+    recipient_phone,
+    description,
     present_location: pickupLocation,
     price,
     order_status: 1,

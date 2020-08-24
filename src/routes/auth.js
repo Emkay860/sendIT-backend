@@ -13,6 +13,7 @@ authRouter.route("/signup").post((req, res) => {
   const firstname = req.body.firstname;
   const lastname = req.body.lastname;
   const email = req.body.email;
+  const phone_number = req.body.phone_number;
 
   // Encrypt the password using bcrypt package
   const password = bcrypt.hashSync(req.body.password, saltRounds);
@@ -25,6 +26,7 @@ authRouter.route("/signup").post((req, res) => {
     firstname,
     lastname,
     email,
+    phone_number,
     password,
   });
 
