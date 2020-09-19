@@ -51,22 +51,30 @@ authRouter.route("/login").post((req, res) => {
       bcrypt
         .compare(password, user.password)
         .then((result) => {
-          // Create a new jsonwebtoken on user login
-          jwt.sign(
-            { user_id: user.id, firstname: user.firstname, email: user.email },
-            "jwt_secretkey",
-            { expiresIn: "7d" },
-            (err, token) => {
-              res.json({
+          if (result === true) {
+            // Create a new jsonwebtoken on user login
+            jwt.sign(
+              {
                 user_id: user.id,
+                firstname: user.firstname,
                 email: user.email,
-                token,
-                role: user.role,
-              });
-            }
-          );
+              },
+              "jwt_secretkey",
+              { expiresIn: "7d" },
+              (err, token) => {
+                res.json({
+                  user_id: user.id,
+                  email: user.email,
+                  token,
+                  role: user.role,
+                });
+              }
+            );
+          } else {
+            res.status(400).json("Password Incorrect");
+          }
         })
-        .catch((err) => res.status(400).json("Password Incorrect"));
+        .catch((err) => res.status(400).json("Error " + err));
     })
     .catch((err) => res.status(400).json("Incorrect email"));
 });
