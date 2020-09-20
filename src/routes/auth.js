@@ -30,14 +30,37 @@ authRouter.route("/signup").post((req, res) => {
     password,
   });
 
-  newUser
-    .save()
-    .then(() => {
-      // Send mail to user to confirm registration.
-      confirmEmail(email, firstname);
-      res.json("New User created ");
-    })
-    .catch((err) => res.status(400).json("Error " + err));
+  // Check database for record of existig user with the same email
+  try {
+    User.findOne({ email: email }).then((existingUser) => {
+      if (existingUser === null) {
+        // If new user is found with matching email,
+        // save new user to database
+        newUser
+          .save()
+          .then(() => {
+            // Send mail to user to confirm registration.
+            confirmEmail(email, firstname);
+            res.json("New User created ");
+          })
+          .catch((err) => res.status(400).json("Error " + err));
+      } else {
+        // Else send message that email already exists in the database
+        res.json({ error: "User with the email already exists!" });
+      }
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+
+  // newUser
+  //   .save()
+  //   .then(() => {
+  //     // Send mail to user to confirm registration.
+  //     confirmEmail(email, firstname);
+  //     res.json("New User created ");
+  //   })
+  //   .catch((err) => res.status(400).json("Error " + err));
 });
 
 // Allow user to sign In
