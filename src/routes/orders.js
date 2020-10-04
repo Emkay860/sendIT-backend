@@ -32,6 +32,11 @@ orderRouter.route("/").post((req, res) => {
   const description = req.body.description;
   const price = Number(req.body.price);
 
+  let phoneRegex = "(\\+)\\d+([0-9])";
+  if (!recipient_phone.match(phoneRegex)) {
+    res.json("Phone number should be of +xxxxxxxxxx format");
+  }
+
   const newOrder = new Order({
     user_id: userId,
     pickup_location: pickupLocation,

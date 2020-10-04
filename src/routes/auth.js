@@ -15,6 +15,10 @@ authRouter.route("/signup").post((req, res) => {
   const email = req.body.email;
   const phone_number = req.body.phone_number;
 
+  let phoneRegex = "(\\+)\\d+([0-9])";
+  if (!phone_number.match(phoneRegex)) {
+    res.json({ Error: "Phone number should be of +xxxxxxxxxx format" });
+  }
   // Encrypt the password using bcrypt package
   const password = bcrypt.hashSync(req.body.password, saltRounds);
 
